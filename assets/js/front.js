@@ -97,7 +97,6 @@ jQuery(document).ready(function ($) {
     const productType = $(this).data("type");
     let href = $(this).attr("href");
 
-
     if (productType === "grouped") {
       // getQty();
     }
@@ -124,7 +123,11 @@ jQuery(document).ready(function ($) {
           prod_id: prodId,
         },
         success: function (results) {
-          const payLoad = { ...payloadFb, ...results, value: variant[0].price };
+          let value = 0;
+          if (variant.length > 0) value = variant[0].price;
+
+          if (productType === "grouped") value = parseFloat(results.price);
+          const payLoad = { ...payloadFb, ...results, value };
           // console.log("bt-ajax", { results, payLoad });
           fbq(
             "trackCustom",

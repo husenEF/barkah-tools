@@ -17,7 +17,7 @@ function bt_add_button_plugin()
         $currentPage = get_post($pageId);
         $slug = $currentPage->post_name;
     }
-
+    $product_type = $product->get_type();
     $id = $product->get_id();
     $title = $product->get_name();
     $currency = get_woocommerce_currency_symbol();
@@ -47,6 +47,7 @@ function bt_add_button_plugin()
     $dataAttr = " data-curency='$currency'";
     $dataAttr .= " data-product-name='$title'";
     $dataAttr .= " data-prod-id='$id'";
+    $dataAttr .= " data-type='$product_type'";
     // sanitize_key()
 
     if ($bt_wa_no != '') {
@@ -127,6 +128,8 @@ function handling_bt_changevariant()
             'content_ids'  => wp_json_encode(["wc_post_id_" . $product->get_id()]),
             'content_type' => $content_type,
             // 'value'        => $order->get_total(),
+            'price' => $product->get_price(),
+            'type' => $product->get_type(),
             'currency'     => get_woocommerce_currency(),
         ];
         wp_send_json($response);
