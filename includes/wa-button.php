@@ -129,7 +129,7 @@ function handling_bt_changevariant()
             'content_type' => $content_type,
             // 'value'        => $order->get_total(),
             'price' => $product->get_price(),
-            'type' => $product->get_type(),
+            'product_type' => $product->get_type(),
             'currency'     => get_woocommerce_currency(),
         ];
         wp_send_json($response);
