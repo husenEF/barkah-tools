@@ -97,16 +97,13 @@ jQuery(document).ready(function ($) {
     const productType = $(this).data("type");
     let href = $(this).attr("href");
 
-    if (variant.length > 0) {
-      total = variant.reduce((e, v) => e.price + v);
-      console.log({ total });
-    }
 
     if (productType === "grouped") {
-      getQty();
+      // getQty();
     }
 
     if (variant.length > 0) {
+      total = variant.reduce((e, v) => e.price + v);
       const varName = variant[0].name;
       href = href.replace("var:", `*Varian*: ${varName.toUpperCase()}%0D%0A`);
     } else {
