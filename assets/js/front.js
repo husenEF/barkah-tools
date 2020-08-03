@@ -29,64 +29,13 @@ jQuery(document).ready(function ($) {
     // $("[name='update_cart']").trigger("click");
     const name = $(this).attr("name");
     const val = $(this).val();
-    console.log({ name, val });
+    // console.log({ name, val });
+    total += parseFloat(val);
   });
 
   $(".variations_form").on("woocommerce_variation_select_change", function (e) {
     console.log({ e });
   });
-
-  const getQty = async () => {
-    const qtys = $(".qty").toArray();
-    // console.log(qtys.toArray());
-    let total = 0;
-    let ret = [];
-
-    qtys.length > 0
-      ? await qtys.map((e) => {
-          let id = $(e).attr("name");
-          id = id.match(/\d+/g);
-          id = id[0];
-          const val = $(e).val();
-
-          $.ajax({
-            type: "post",
-            url: bt_ajax.ajax_url,
-            data: {
-              action: "bt_order_wa",
-              prod_id: id,
-            },
-            success: function (results) {
-              // const payLoad = { ...payloadFb, ...results, value: variant[0].price };
-              // console.log("bt-ajax", { results, payLoad });
-              // fbq(
-              //   "trackCustom",
-              //   pixelName,
-              //   // begin parameter object data
-              //   payLoad
-              //   // end parameter object data
-              // );
-              const ttotal = parseFloat(results.price * val);
-              ret.push({
-                id,
-                price: results.price,
-                total: ttotal,
-              });
-              total += ttotal;
-            },
-            error: function (error) {
-              console.log("bt-ajax-error", { error });
-            },
-          });
-        })
-      : null;
-    let red = 0;
-    if (ret.length > 0) {
-      red = ret.reduce((e, b) => console.log({ e, b }));
-    }
-    console.log({ ret, red, total });
-    // return ret;
-  };
 
   $(".barkah-tools.add-to-cart").on("click", function (e) {
     const isDisabled = $(this).children("button").hasClass("disabled");
@@ -98,15 +47,21 @@ jQuery(document).ready(function ($) {
     let href = $(this).attr("href");
 
     if (productType === "grouped") {
-      // getQty();
+      const qty = $(".qty").toArray();
+
+      console.log({ total });
     }
 
     if (variant.length > 0) {
       total = variant.reduce((e, v) => e.price + v);
       const varName = variant[0].name;
-      href = href.replace("var:", `*Varian*: ${varName.toUpperCase()}%0D%0A`);
+      let varText = `*Varian*: ${varName.toUpperCase()}%0D%0A`;
+      if (total > 0) varText = `${varText}, *Total*: ${total}%0D%0A`;
+      href = href.replace("var:", varText);
     } else {
-      href = href.replace("var:", ``);
+      let varText = `*Varian*: -`;
+      if (total > 0) varText = `${varText}, *Total*: ${total}%0D%0A`;
+      href = href.replace("var:", varText);
     }
 
     if (!isDisabled) {
